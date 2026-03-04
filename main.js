@@ -20,11 +20,38 @@ const line=document.getElementById("line");
 const handle=document.getElementById("handle");
 const magnifier=document.getElementById("magnifier");
 
+function showSpinner(){
+    const s = document.getElementById('compareSpinner');
+    if(s) s.style.display = 'block';
+}
+function hideSpinner(){
+    const s = document.getElementById('compareSpinner');
+    if(s) s.style.display = 'none';
+}
+
 function updateImage(){
-    original.src=imagePairs[currentIndex].original;
-    recon.src=imagePairs[currentIndex].recon;
     const bpp = imagePairs[currentIndex].bpp.toFixed(4);
     document.getElementById("imageCounter").innerText=(currentIndex+1)+" / "+imagePairs.length+" | bpp: "+bpp;
+
+    showSpinner();
+
+    let remaining = 2;
+    function loaded(){
+        remaining -= 1;
+        if(remaining <= 0) hideSpinner();
+    }
+
+    // attach one-time load handlers
+    original.addEventListener('load', loaded, {once:true});
+    recon.addEventListener('load', loaded, {once:true});
+
+    // set sources (triggers load)
+    original.src = imagePairs[currentIndex].original;
+    recon.src = imagePairs[currentIndex].recon;
+
+    // handle cached images which may already be complete
+    if(original.complete) loaded();
+    if(recon.complete) loaded();
 }
 updateImage();
 

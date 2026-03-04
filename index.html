@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Paper Title</title>
+<title>DiT-IC CVPR 2026/title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- MathJax for LaTeX rendering -->
@@ -76,8 +76,11 @@ MathJax = {
 </div>
 
 <div class="compare-wrapper" id="compare">
-<img id="original" class="original-img">
-<img id="recon" class="recon-img">
+  <div class="compare-spinner" id="compareSpinner" aria-hidden="true" style="display:none;" role="status" aria-label="Loading">
+    <div class="spinner-circle"></div>
+  </div>
+  <img id="original" class="original-img">
+  <img id="recon" class="recon-img">
 
 <div class="slider-line" id="line"></div>
 <div class="slider-handle" id="handle"></div>
@@ -157,7 +160,7 @@ In contrast, conventional VAE-based codecs work in much deeper latent domains (1
 </div>
 
 <footer>
-© 2026 Your Lab
+© NJU VisionLab 2026. All rights reserved.
 </footer>
 
 <script src="main.js"></script>
