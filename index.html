@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Paper Title</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- MathJax for LaTeX rendering -->
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }
+};
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body class="light">
+
+<button id="themeToggle" class="theme-toggle">☀️</button>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="https://github.com/" class="nav-logo">Paper</a>
+    <ul class="nav-menu">
+      <li><a href="#visualization" class="nav-link">Visualization</a></li>
+      <li><a href="#abstract" class="nav-link">Abstract</a></li>
+      <li><a href="#method" class="nav-link">Method</a></li>
+      <li><a href="#bibtex" class="nav-link">Citation</a></li>
+    </ul>
+    <div class="nav-social">
+      <a href="https://github.com/" title="GitHub" class="social-icon"><i class="fab fa-github"></i></a>
+      <a href="https://github.com/" title="arXiv" class="social-icon"><i class="fas fa-file-pdf"></i></a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+<h1>DiT-IC: Aligned Diffusion Transformer for Efficient Image Compression</h1>
+<div class="subtitle">Junqi Shi, Ming Lu, Xingchen Li, Anle Ke, Ruiqi Zhang, Zhan Ma</div>
+
+<!-- Logos -->
+<div class="logos">
+    <img src="images/cvpr.png">
+    <img src="images/nju.png">
+    <img src="images/ditic.png">
+</div>
+
+<div class="btn-group">
+    <a href="https://github.com/" class="btn btn-primary">📄 Paper</a>
+    <a href="https://github.com/" class="btn btn-secondary">💻 Code</a>
+</div>
+
+<!-- Teaser Image -->
+<div class="section">
+<div style="text-align:center; margin-bottom:30px;">
+    <img src="images/overall.png" alt="DiT-IC Teaser" style="max-width:100%; height:auto; border-radius:12px;">
+</div>
+</div>
+
+<!-- Visualization -->
+<div id="visualization" class="section card">
+<div class="section-title">Visual Comparison</div>
+
+<div class="gallery-controls">
+    <button class="btn small" onclick="prevImage()">← Prev</button>
+    <button class="btn small" onclick="nextImage()">Next →</button>
+    <span class="image-counter" id="imageCounter">1 / 2 | bpp: 0.0373</span>
+    <button class="btn small" id="magnifierToggle" onclick="toggleMagnifier()" style="background:#666;">🔍 Zoom</button>
+</div>
+
+<div class="compare-wrapper" id="compare">
+<img id="original" class="original-img">
+<img id="recon" class="recon-img">
+
+<div class="slider-line" id="line"></div>
+<div class="slider-handle" id="handle"></div>
+
+<div class="label label-left">Reconstruction</div>
+<div class="label label-right">Original</div>
+
+<div class="magnifier" id="magnifier"></div>
+</div>
+</div>
+
+<!-- Abstract -->
+<div id="abstract" class="section card">
+<div class="section-title">Abstract</div>
+<p>Diffusion-based image compression has recently shown outstanding perceptual fidelity, yet its practicality is hindered by prohibitive sampling overhead and high memory usage.
+Most existing diffusion codecs employ UNet architectures, where hierarchical downsampling forces diffusion to operate in shallow latent spaces (typically with only 8× spatial downscaling), resulting in excessive computation.
+In contrast, conventional VAE-based codecs work in much deeper latent domains (16× –64× downscaled), motivating a key question: <em>Can diffusion operate effectively in such compact latent spaces without compromising reconstruction quality?</em></p>
+<p>To address this, we introduce <strong>DiT-IC</strong>—an Aligned <strong>Di</strong>ffusion <strong>T</strong>ransformer for <strong>I</strong>mage <strong>C</strong>ompression—which replaces the UNet with a Diffusion Transformer capable of performing diffusion in latent space entirely at 32× downscaled resolution. DiT-IC adapts a pretrained text-to-image multi-step DiT into a single-step reconstruction model through three key alignment mechanisms:</p>
+<ul>
+<li>a <strong>variance-guided reconstruction flow</strong> that adapts denoising strength to latent uncertainty for efficient reconstruction;</li>
+<ul>
+
+</ul>
+<li>a <strong>self-distillation alignment</strong> that enforces consistency with encoder-defined latent geometry to enable one-step diffusion;</li>
+<ul>
+    
+</ul>
+<li>a <strong>latent-conditioned guidance</strong> that replaces text prompts with semantically aligned latent conditions, enabling text-free inference.</li>
+</ul>
+
+<p>With these designs, DiT-IC achieves state-of-the-art perceptual quality while offering up to <strong>30× faster decoding</strong> and drastically lower memory usage than existing diffusion-based codecs. Remarkably, it can reconstruct 2048×2048 images on a 16 GB laptop GPU.</p>
+</div>
+</div>
+
+<!-- Method -->
+<div id="method" class="section card">
+  <div class="method-grid">
+    <div class="method-text">
+      <div class="section-title">Method Overview</div>
+      <p>
+        We propose a neural compression framework with autoregressive modeling
+        and adaptive entropy estimation achieving superior rate-distortion trade-off.
+      </p>
+      </ul>
+      <ul style="line-height:1.8;">
+        <li><strong>Variance-Guided Flow Matching:</strong> Unlike standard diffusion that starts from Gaussian noise, compression reconstruction begins from a quantized latent $\mathbf{y}_t$ containing structured noise. The local variance $\sigma(\mathbf{y}_t)$ measures spatial uncertainty, which we map to pseudo-timesteps $t = \mathcal{F}(\sigma)$ for spatially adaptive one-step flow matching.</li>
+        <li><strong>Self-Distillation Alignment:</strong> DiT-IC distills the multi-step diffusion process into a single forward pass by aligning its denoised latent with the frozen encoder representation, while jointly optimizing the diffusion transformer and decoder. $\mathbf{y}_\theta(\cdot)$ denotes the denoised output, and $\mathcal{L}_{\text{rd}}$ indicates the rate–distortion loss.</li>
+        <li><strong>Latent-Conditioned Guidance:</strong> We replace text-based guidance in DiT with a latent-conditioned projection derived from the compressed representation by aligning projected latent and text embeddings, enabling text-free conditioning at inference.</li>
+      </ul>
+    </div>
+    <div class="method-image">
+      <img src="images/method.png" alt="Method illustration">
+    </div>
+  </div>
+</div>
+
+<!-- BibTeX -->
+<div id="bibtex" class="section card">
+<div class="bibtex-header">
+  <div class="section-title">BibTeX</div>
+  <div class="bibtex-controls">
+    <button class="btn small" onclick="copyBibtex()">Copy</button>
+    <span id="copyMsg"></span>
+  </div>
+</div>
+
+<pre id="bibtex">
+@inproceedings{shi2026ditic,
+  title={DiT-IC: Aligned Diffusion Transformer for Efficient Image Compression},
+  author={Shi Junqi, Lu Ming, Li Xingchen, Ke Anle, Zhang Ruiqi and Ma Zhan},
+  booktitle={CVPR},
+  year={2026}
+}
+</pre>
+</div>
+
+</div>
+
+<footer>
+© 2026 Your Lab
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
